@@ -18,10 +18,10 @@ class FeatureEngineer(BaseEstimator, TransformerMixin):
         df["Car_Age"] = self.current_year - df["Year"]
 
         # 2) Vintage flag
-        df["IsVintage"] = (df["Year"] < 2000).astype("bool")
+        df["IsVintage"] = (df["Car_Age"] >= 30)
 
         # 3) Big engine flag ( >7L )
-        df["IsBigEngine"] = (df["Engine_Size"] > 7.0).astype("bool")
+        df["IsBigEngine"] = (df["Engine_Size"] > 7.0)
 
         # 4) drop unused
         df = df.drop(columns=["Negotiable", "Mileage_per_Year", 
