@@ -51,7 +51,7 @@ with tab_batch:
     st.write("""
     Upload a CSV with *at least* these columns:  
     `Make, Type, Year, Engine_Size, Mileage, Region, Gear_Type, Origin, Options`.  
-    Any other columns (e.g. your own `Price` or an `ID`) will be returned untouched.
+    Any other columns (e.g. your own `Price`, an `ID`, or `Negotiable`) will be returned untouched.
     """)
 
     uploaded = st.file_uploader("Choose a CSV file", type="csv")
@@ -63,10 +63,21 @@ with tab_batch:
         except Exception as e:
             st.error(f"⚠️ Could not read CSV: {e}")
         else:
+            # check required columns
             missing = [c for c in required if c not in df_input.columns]
             if missing:
                 st.error(f"Missing required columns: {missing}")
             else:
+                # optional: drop negotiable rows if column exists
+                if 'Negotiable' in df_input.columns:
+                    neg_count = int(df_input['Negotiable'].sum())
+                    if neg_count > 0:
+                        df_input = df_input[df_input['Negotiable'] == False]
+                        st.warning(
+                            f"⚠️ Removed {neg_count} row{'s' if neg_count>1 else ''} "
+                            "with negotiable prices. This tool only supports non-negotiable prices."
+                        )
+
                 st.write("Preview:")
                 st.dataframe(df_input.head(5))
 
@@ -88,6 +99,7 @@ with tab_batch:
                         file_name="saudi_used_car_predictions.csv",
                         mime="text/csv"
                     )
+
 
 # ── TAB 2: SINGLE CAR ─────────────────────────────────────────────────────────
 with tab_single:
