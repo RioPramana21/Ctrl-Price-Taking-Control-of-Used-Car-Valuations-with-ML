@@ -21,6 +21,8 @@ class FeatureEngineer(BaseEstimator, TransformerMixin):
                  vintage_cutoff=30,
                  big_engine_cutoff=7.0):
         self.current_year = current_year
+        self.vintage_cutoff = vintage_cutoff
+        self.big_engine_cutoff = big_engine_cutoff
 
     def fit(self, X, y=None):
         # nothing to learn
@@ -38,10 +40,5 @@ class FeatureEngineer(BaseEstimator, TransformerMixin):
 
         # 3) Big engine flag ( >7L )
         df["IsBigEngine"] = (df["Engine_Size"] > self.big_engine_cutoff)
-
-        # 4) drop unused
-        df = df.drop(columns=["Negotiable", "Mileage_per_Year", 
-                              "Unnatural_High_Mileage_Flag", "Year"],
-                     errors="ignore")
 
         return df
