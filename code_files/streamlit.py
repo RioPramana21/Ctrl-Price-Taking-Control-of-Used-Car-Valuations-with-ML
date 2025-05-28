@@ -25,7 +25,6 @@ model = load_model()
 df_ref = load_reference_data()
 
 # ── BUILD SELECT OPTIONS ──────────────────────────────────────────────────────
-# Make, Model (Type), Region, Gear, Origin, Options
 makes       = sorted(df_ref['Make'].dropna().unique())
 models      = sorted(df_ref['Type'].dropna().unique())
 min_year    = int(df_ref['Year'].min())
